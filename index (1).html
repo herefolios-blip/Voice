@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Voxa</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#120d26"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Voxa"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#120d26;--bg2:#2a1f55;--surf:rgba(255,255,255,.055);--bd:rgba(255,255,255,.09);--surf2:#2d2357;--tx:#fff;--mut:#b9b0d6;--line:#ff9fae;--band:rgba(212,240,138,.1);--bandl:#d4f08a;--g1:#c9a9ff;--g2:#ff9fae;--lime:#d4f08a;--btnt:#1a1030;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -61,6 +62,7 @@ audio{width:100%;margin-top:8px}.hide{display:none!important}
 <details class="msg"><summary>Settings</summary>
 <label class="sw"><input type="checkbox" id="oH"> Hide numbers</label><label class="sw"><input type="checkbox" id="oP"> Just practice (no summary after)</label>
 <div class="row"><span>Nudge targets <span id="nz" style="color:var(--mut)"></span></span><span><button class="pill" id="nd">Lower</button> <button class="pill" id="nu">Higher</button></span></div>
+<div class="row"><span>Pitch line</span><button class="pill" id="sm"></button></div><div class="row"><span>Resonance marker</span><button class="pill" id="cb">Calibrate</button></div>
 <p style="margin:8px 0 4px">My own sentences (one per line)</p><textarea id="mine" rows="3" class="ta"></textarea>
 <div class="row"><button class="pill" id="bk">Back up</button><button class="pill" id="rs2">Restore</button></div>
 <p id="bm" style="margin:0">Backup covers settings, check-ins and days. Recordings are not included.</p><textarea id="bt" class="ta hide" rows="4"></textarea></details></section>
@@ -78,7 +80,7 @@ audio{width:100%;margin-top:8px}.hide{display:none!important}
 <div class="msg hide" id="done"></div></section>
 
 <section id="prog" class="hide"><h2>Progress</h2><p>Your natural speaking pitch, week to week. Small moves are real moves.</p>
-<canvas id="pc"></canvas><p id="pt" style="margin-top:12px"></p><button class="btn" id="ck">Do a check-in</button><h3>Days you practiced</h3><div id="cal"></div></section>
+<canvas id="pc"></canvas><p id="pt" style="margin-top:12px"></p><button class="btn" id="ck">Do a check-in</button><h3>Days you practiced</h3><div id="cal"></div><h3>Your notes</h3><div id="nl"></div></section>
 
 <section id="recs" class="hide"><h2>Recordings</h2><p>Only what you chose to save, stored on this phone.</p><div id="rlist"></div></section>
 
@@ -86,7 +88,7 @@ audio{width:100%;margin-top:8px}.hide{display:none!important}
 </main>
 <script>
 const $=id=>document.getElementById(id),today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-let cfg={s:50,hide:false,plain:false,last:'',checks:[],off:0,days:[],feels:[],mine:''};
+let cfg={s:50,hide:false,plain:false,last:'',checks:[],sm:1,cal:null,notes:[],off:0,days:[],feels:[],mine:''};
 try{Object.assign(cfg,JSON.parse(localStorage.getItem('vp2')||'{}'))}catch(e){}
 const save=()=>{try{localStorage.setItem('vp2',JSON.stringify(cfg))}catch(e){}};
 const band=()=>{const a=105+cfg.off,b=230+cfg.off,c=a*Math.pow(b/a,cfg.s/100);return{lo:c*.9,hi:c*1.1}};
@@ -104,10 +106,14 @@ const EX=[
 const CHECK={id:'check',read:1,t:'Weekly check-in',d:'Read these naturally, or just chat about your day. It stops itself after 20 seconds.'};
 const S=["I'm heading to the shop, do you need anything?","Could you tell me what time the meeting starts?","The weather was lovely when we went for a walk.","Thanks so much, I really appreciate your help.","Let me know if you'd like to grab coffee later.","Sorry, could you say that one more time?","We had pasta for dinner and it was really good.","I'll be there in about ten minutes."];
 const sents=()=>[...S,...(cfg.mine||'').split('\n').map(x=>x.trim()).filter(Boolean)];
+const CAL={id:'cal',t:'Calibrate resonance',d:'Say “oo” as dark and deep-feeling as is comfortable, then “ee” as bright and light as is comfortable. Repeat a couple of times. It stops itself after 20 seconds.'};
+const isT=()=>ex.id==='check'||ex.id==='cal';
+const norm=c=>{const a=cfg.cal?cfg.cal.lo:500,b=cfg.cal?cfg.cal.hi:3000;return Math.min(1,Math.max(0,(c-a)/(b-a)))};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ROUT={warm:{t:'Warm-up',steps:[{t:'Easy hum',d:'Hum softly, like you are agreeing with someone.',s:45},{t:'Lip trill or straw',d:'Gentle bubbles, light breath.',s:45},{t:'Soft siren',d:'Slide up and down, nothing forced.',s:45}]},
 cool:{t:'Cool-down',steps:[{t:'Soft sighs',d:'Let the voice fall out on a sigh.',s:30},{t:'Low easy hum',d:'Hum comfortably, no effort.',s:30},{t:'Sip water',d:'Take a moment. You did good work.',s:20}]}};
 const KIND=['Nice work.','Easy does it. That counts.','Showing up is the practice.','It all adds up.'];
-let ex,run=null,hist=[],voiced=[],bright=.5,t0=0,nudged=false,lastBlob=null,si=0,rt=null;
+let cents=[],fb=[],ex,run=null,hist=[],voiced=[],bright=.5,t0=0,nudged=false,lastBlob=null,si=0,rt=null;
 function go(id){['home','sess','prog','recs','rout'].forEach(x=>$(x).classList.toggle('hide',x!==id));
  $('nav').classList.toggle('hide',id==='sess'||id==='rout');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));
  if(id==='home')renderHome();if(id==='prog')renderProg();if(id==='recs')renderRecs()}
@@ -117,7 +123,7 @@ $('oH').checked=cfg.hide;$('oP').checked=cfg.plain;
 $('oH').onchange=e=>{cfg.hide=e.target.checked;save()};$('oP').onchange=e=>{cfg.plain=e.target.checked;save()};
 const MIN={range:3,siren:3,hold:3,straw:4,res:4,read:5,glide:3,vowels:4,dog:3};
 function card(host,x,fn,sub,m,v){const b=document.createElement('button');b.className='lib';b.innerHTML=`<span class="ic v${v}"></span><span class="lt"><span class="lh"><b>${x.t}</b><em>${m} min</em></span><span>${sub}</span></span><span class="ar">→</span>`;b.onclick=fn;host.append(b)}
-function renderHome(){$('mine').value=cfg.mine||'';nz();$('oH').checked=cfg.hide;$('oP').checked=cfg.plain;$('rl').innerHTML='';$('list').innerHTML='';
+function renderHome(){$('mine').value=cfg.mine||'';nz();smt();$('oH').checked=cfg.hide;$('oP').checked=cfg.plain;$('rl').innerHTML='';$('list').innerHTML='';
  card($('rl'),ROUT.warm,()=>startRout('warm'),'Easy hum, lip trill and a soft siren.',2,0);card($('rl'),ROUT.cool,()=>startRout('cool'),'Soft sighs and a low hum to finish.',1,1);
  EX.forEach((x,i)=>card($('list'),x,()=>open(x),x.d.split('.')[0]+'.',MIN[x.id],i%3));
  const dn=Math.floor(Date.now()/864e5),pick=EX[dn%EX.length],c=cfg.checks,due=!c.length||(Date.now()-new Date(c[c.length-1].t))/864e5>=7,dd=cfg.last===today();
@@ -152,25 +158,26 @@ async function start(){try{const st=await navigator.mediaDevices.getUserMedia({a
  run={st,ac,an,td:new Float32Array(2048),fd:new Float32Array(1024)};lastBlob=null;
  try{const ch=[],rec=new MediaRecorder(st);rec.ondataavailable=e=>ch.push(e.data);rec.onstop=()=>{lastBlob=new Blob(ch,{type:rec.mimeType})};rec.start();run.rec=rec}catch(e){}
  }catch(e){$('now').textContent='Mic blocked. Allow it in Safari settings.';return}
- hist=[];voiced=[];t0=performance.now();nudged=false;$('done').classList.add('hide');$('gt').textContent='Stop';loop()}
+ hist=[];voiced=[];cents=[];fb=[];t0=performance.now();nudged=false;$('done').classList.add('hide');$('gt').textContent='Stop';loop()}
 function loop(){if(!run)return;const{an,td,fd,ac}=run;an.getFloatTimeDomainData(td);let rms=0;for(const v of td)rms+=v*v;rms=Math.sqrt(rms/td.length);
  const now=performance.now();let f=null;if(rms>.01){const p=yin(td,ac.sampleRate);if(p&&p.c>.8)f=p.f}
+ if(f!=null){fb.push(f);const N=[1,5,9][cfg.sm];while(fb.length>N)fb.shift();f=[...fb].sort((a,b)=>a-b)[fb.length>>1]}else fb=[];
  hist.push({t:now,f});while(hist.length&&now-hist[0].t>W)hist.shift();
  if(f!=null){voiced.push(f);an.getFloatFrequencyData(fd);const bw=ac.sampleRate/2048;let n=0,d=0;
   for(let i=Math.floor(300/bw);i<Math.floor(4000/bw);i++){const m=Math.pow(10,fd[i]/20);n+=m*i*bw;d+=m}
-  if(d>0){bright+=(Math.min(1,Math.max(0,(n/d-500)/2500))-bright)*.15;$('dot').style.left=(5+bright*90)+'%'}}
- $('now').textContent=ex.id==='check'?Math.max(0,20-Math.floor((now-t0)/1000))+'s':cfg.hide?'':f!=null?Math.round(f)+' Hz':'…';
- if(ex.id==='check'&&now-t0>2e4){stop(true);return}
+  if(d>0){cents.push(n/d);bright+=(norm(n/d)-bright)*.15;$('dot').style.left=(5+bright*90)+'%'}}
+ $('now').textContent=isT()?Math.max(0,20-Math.floor((now-t0)/1000))+'s':cfg.hide?'':f!=null?Math.round(f)+' Hz':'…';
+ if(isT()&&now-t0>2e4){stop(true);return}
  if(!nudged&&now-t0>9e5){nudged=true;$('now').textContent='15 min. Sip water, rest.'}
  draw();requestAnimationFrame(loop)}
 function stop(show){if(!run)return;const r=run;run=null;try{r.rec&&r.rec.state!=='inactive'&&r.rec.stop()}catch(e){}r.st.getTracks().forEach(t=>t.stop());r.ac.close();$('gt').textContent='Start listening';
  if(!show)return;const d=$('done'),kind=KIND[Math.floor(Math.random()*KIND.length)];d.classList.remove('hide');
  if(voiced.length<10){d.textContent='Not much voice picked up. Try a bit closer to the mic. '+kind;return}
  cfg.last=today();if(!cfg.days.includes(today()))cfg.days.push(today());const s=[...voiced].sort((a,b)=>a-b),q=p=>s[Math.floor(p*(s.length-1))];
- if(ex.id==='check'&&voiced.length>=30){cfg.checks.push({t:today(),m:Math.round(q(.5))})}save();
+ if(ex.id==='check'&&voiced.length>=30){cfg.checks.push({t:today(),m:Math.round(q(.5))})}if(ex.id==='cal'&&cents.length>=40){const c=[...cents].sort((a,b)=>a-b),lo=c[Math.floor(.1*(c.length-1))],hi=c[Math.floor(.9*(c.length-1))];cfg.cal={lo,hi:Math.max(hi,lo+300)}}save();
  let h='';if(!cfg.plain&&!cfg.hide){const b=band(),inb=voiced.filter(f=>f>=b.lo&&f<=b.hi).length/voiced.length;
   h=ex.id==='range'?`<p>You reached ${Math.round(q(.05))}–${Math.round(q(.95))} Hz.</p>`:`<p>Middle pitch ${Math.round(q(.5))} Hz · in band ${Math.round(inb*100)}%</p>`}
- if(ex.id==='check')h+='<p>Check-in saved to Progress.</p>';
+ if(ex.id==='check')h+='<p>Check-in saved to Progress.</p>';if(ex.id==='cal')h+=cents.length>=40?'<p>Done. The marker now measures against your own voice.</p>':'<p>Not enough sound picked up. Try again a little closer.</p>';
  d.innerHTML=h+(r.rec?'<button class="btn" id="svr">Save recording</button>':'')+FEEL+`<p style="margin:12px 0 0">${kind}</p>`;
  if($('svr'))$('svr').onclick=async()=>{if(!lastBlob){$('svr').textContent='Tap again';return}try{await dbPut({id:Date.now(),t:ex.t,d:today(),blob:lastBlob});$('svr').textContent='Saved';$('svr').disabled=true}catch(e){$('svr').textContent='Could not save'}}}
 const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('vp',1);r.onupgradeneeded=()=>r.result.createObjectStore('r',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=rej});
@@ -185,7 +192,7 @@ async function renderRecs(){const h=$('rlist');h.innerHTML='';sel=[];let all=[];
  all.reverse().forEach(o=>{const d=document.createElement('div');d.className='msg';d.innerHTML=`<b>${o.t}</b> <span style="color:var(--mut)">${o.d}</span><audio controls src="${URL.createObjectURL(o.blob)}"></audio><button class="ghost" data-c>Compare</button> <button class="ghost" data-x>Delete</button>`;
   const cb=d.querySelector('[data-c]');bs.push([cb,o]);cb.onclick=()=>{sel.includes(o)?sel.splice(sel.indexOf(o),1):(sel.push(o),sel.length>2&&sel.shift());ref()};
   d.querySelector('[data-x]').onclick=async()=>{await dbX('delete',o.id);renderRecs()};h.append(d)})}
-function renderProg(){cal();const c=cfg.checks,pc=$('pc'),x=pc.getContext('2d'),r=fit(pc),w=pc.width,h=pc.height,b=band();x.clearRect(0,0,w,h);
+function renderProg(){cal();notes();const c=cfg.checks,pc=$('pc'),x=pc.getContext('2d'),r=fit(pc),w=pc.width,h=pc.height,b=band();x.clearRect(0,0,w,h);
  if(!c.length){$('pt').textContent='No check-ins yet. Your first one takes about 20 seconds.';return}
  const v=c.map(k=>k.m),lo=Math.min(...v,b.lo)*.92,hi=Math.max(...v,b.hi)*1.08,Y=f=>h-14*r-(Math.log(f/lo)/Math.log(hi/lo))*(h-28*r);
  x.fillStyle=css('--band');x.fillRect(0,Y(b.hi),w,Y(b.lo)-Y(b.hi));
@@ -201,8 +208,8 @@ function startRout(k){const R=ROUT[k];let i=0,t;go('rout');$('rT').textContent=R
  clearInterval(rt);show();rt=setInterval(()=>{if(!R.steps[i])return;t--;$('rc').textContent=Math.max(0,t);if(t<=0){i++;show()}},1000);
  $('rn').onclick=()=>{if(!R.steps[i]){clearInterval(rt);go('home');return}i++;show();if(!R.steps[i-0]&&0)0}}
 addEventListener('resize',()=>{draw();if(!$('prog').classList.contains('hide'))renderProg()});
-const FEEL='<p style="margin:12px 0 6px">How did that feel?</p><div id="fl" style="display:flex;gap:8px;flex-wrap:wrap">'+['Easy','A bit strained','Tired'].map((x,i)=>`<button class="pill" data-f="${i}">${x}</button>`).join('')+'</div>';
-document.addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(b){cfg.feels.push({t:today(),v:+b.dataset.f});save();$('fl').innerHTML='<span style="color:var(--mut)">Thanks, noted.</span>'}});
+const FEEL='<p style="margin:12px 0 6px">How did that feel?</p><div id="fl" style="display:flex;gap:8px;flex-wrap:wrap">'+['Easy','A bit strained','Tired'].map((x,i)=>`<button class="pill" data-f="${i}">${x}</button>`).join('')+'</div><p style="margin:14px 0 6px">A note for yourself</p><textarea id="nt" class="ta" rows="2" placeholder="What worked, what felt different…"></textarea><button class="pill" id="ns" style="margin-top:8px">Save note</button>';
+document.addEventListener('click',e=>{if(e.target.id==='ns'){const v=$('nt').value.trim();if(v){cfg.notes.push({t:today(),e:ex.t,v});save();e.target.textContent='Saved';e.target.disabled=true}}const b=e.target.closest('[data-f]');if(b){cfg.feels.push({t:today(),v:+b.dataset.f});save();$('fl').innerHTML='<span style="color:var(--mut)">Thanks, noted.</span>'}});
 const tired=()=>cfg.feels.slice(-3).filter(x=>x.v>0&&(Date.now()-new Date(x.t))/864e5<=3).length>=2;
 const nz=()=>{$('nz').textContent=cfg.hide?'':(cfg.off>0?'+':'')+cfg.off+' Hz'};
 $('nu').onclick=()=>{cfg.off=Math.min(60,cfg.off+5);save();nz()};$('nd').onclick=()=>{cfg.off=Math.max(-40,cfg.off-5);save();nz()};
@@ -213,5 +220,8 @@ $('bk').onclick=async()=>{const s=JSON.stringify({v:2,cfg}),ta=$('bt');ta.value=
  try{await navigator.clipboard.writeText(s);$('bm').textContent='Copied. Paste it into Notes to keep it safe.'}catch(e){$('bm').textContent='Select all, copy, and paste into Notes.'}};
 $('rs2').onclick=()=>{const ta=$('bt');if(ta.classList.contains('hide')||!ta.value.trim().startsWith('{')){ta.value='';ta.classList.remove('hide');$('bm').textContent='Paste your backup here, then tap Restore again.';return}
  try{Object.assign(cfg,JSON.parse(ta.value).cfg);save();ta.classList.add('hide');ta.value='';go('home')}catch(e){$('bm').textContent='That backup text did not look right.'}};
+const smt=()=>{$('sm').textContent=['Live','Smooth','Extra smooth'][cfg.sm]};$('sm').onclick=()=>{cfg.sm=(cfg.sm+1)%3;save();smt()};$('cb').onclick=()=>open(CAL);
+function notes(){const n=cfg.notes.slice(-6).reverse();$('nl').innerHTML=n.length?n.map(x=>`<div class="msg" style="margin:0 0 8px"><span style="color:var(--mut);font-size:13px">${x.t} · ${esc(x.e)}</span><br>${esc(x.v)}</div>`).join(''):'<p>Notes you save after sessions will show up here.</p>'}
+try{navigator.serviceWorker&&navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
 go('home');
 </script></body></html>
