@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Voxa</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#120d26"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Voxa"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#120d26;--bg2:#2a1f55;--surf:rgba(255,255,255,.055);--bd:rgba(255,255,255,.09);--surf2:#2d2357;--tx:#fff;--mut:#b9b0d6;--line:#ff9fae;--band:rgba(212,240,138,.1);--bandl:#d4f08a;--g1:#c9a9ff;--g2:#ff9fae;--lime:#d4f08a;--btnt:#1a1030;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f0ff;--bg2:#e7defc;--surf:rgba(60,30,140,.06);--bd:rgba(60,30,140,.12);--surf2:#d9cdf6;--tx:#1d1238;--mut:#5f5680;--line:#d1307f;--band:rgba(95,127,18,.12);--bandl:#5f7f12;--g1:#8f6ff0;--g2:#f07a95;--lime:#5f7f12;--btnt:#fff;}}
+:root[data-theme="light"]{--bg:#f4f0ff;--bg2:#e7defc;--surf:rgba(60,30,140,.06);--bd:rgba(60,30,140,.12);--surf2:#d9cdf6;--tx:#1d1238;--mut:#5f5680;--line:#d1307f;--band:rgba(95,127,18,.12);--bandl:#5f7f12;--g1:#8f6ff0;--g2:#f07a95;--lime:#5f7f12;--btnt:#fff;}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;min-height:100%;color:var(--tx);font:17px/1.45 "DM Sans",system-ui,sans-serif;background:linear-gradient(180deg,var(--bg2),var(--bg) 55%) fixed,var(--bg)}
+main{max-width:560px;margin:0 auto;padding:18px 18px 130px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}h1{font-size:40px;line-height:1.05}h2{font-size:28px}h3{font-size:20px}
+p{margin:0 0 12px;color:var(--mut)}.lead{font-size:18px}
+.eb{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 6px}.mt{margin-top:28px}
+.brand{display:flex;align-items:center;gap:10px;font:700 22px "DM Sans",sans-serif}.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--g1),var(--g2));display:grid;place-items:center}
+.nav{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 28px),532px);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;gap:6px;padding:8px;border-radius:28px;background:rgba(32,24,66,.92);border:1px solid var(--bd);backdrop-filter:blur(14px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .nav{background:rgba(244,240,255,.94)}}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;border:0;border-radius:20px;padding:10px 4px;background:none;color:var(--mut);font:700 12px "DM Sans",sans-serif;cursor:pointer}
+.nav button.on{background:var(--surf2);color:var(--tx)}.nav button.on svg{color:var(--g2)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid var(--bd);border-radius:28px;padding:22px;margin:18px 0 8px}
+.hero::after{content:"";position:absolute;top:-60px;right:-60px;width:170px;height:170px;border-radius:50%;border:24px solid rgba(255,255,255,.04)}
+.tag{display:inline-block;background:var(--lime);color:#1a1030;border-radius:99px;padding:8px 14px;font:700 14px "DM Sans",sans-serif}.tm{position:absolute;top:30px;right:22px;color:var(--mut);font-size:14px;z-index:1}
+.hero h2{margin-top:30px}.seg{display:flex;gap:6px;margin:16px 0 22px}.seg i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.15)}.seg i.f{background:var(--g2)}.hero .note{margin:14px 0 0}
+.cta{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px 16px;border:0;border-radius:22px;background:linear-gradient(90deg,var(--g1),var(--g2));color:var(--btnt);font:700 18px "DM Sans",sans-serif;cursor:pointer;box-shadow:0 10px 30px rgba(255,159,174,.22)}
+.pc{width:38px;height:38px;border-radius:50%;background:rgba(26,16,48,.16);display:grid;place-items:center;font-size:15px}
+.lib{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surf);border:1px solid var(--bd);border-radius:22px;padding:12px 14px 12px 12px;margin:0 0 10px;color:var(--tx);font:inherit;cursor:pointer}
+.lt{flex:1;display:flex;flex-direction:column;gap:2px}.lh{display:flex;justify-content:space-between;align-items:baseline}.lh b{font-size:17px}.lh em{font-style:normal;color:var(--mut);font-size:13px}.lt>span:last-child{color:var(--mut);font-size:14px;line-height:1.35}.ar{color:var(--g1);font-size:20px}
+.ic{flex:none;position:relative;width:78px;height:78px;border-radius:18px;background:var(--surf2)}.ic::before,.ic::after{content:"";position:absolute;inset:0;margin:auto}
+.v0::before{width:46px;height:46px;border-radius:50%;border:9px solid var(--g2)}.v0::after{width:10px;height:10px;border-radius:50%;background:var(--lime)}
+.v1::before{width:56px;height:28px;border-radius:50%;border:6px solid var(--g1);transform:rotate(-20deg)}
+.v2::before{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2))}.v2::after{width:58px;height:58px;border-radius:50%;border:2px solid var(--lime);opacity:.6}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.chip{border:1px solid var(--bd);border-radius:99px;padding:6px 12px;font-size:12px;color:var(--mut)}
+.glass,.msg{background:var(--surf);border:1px solid var(--bd);border-radius:24px;padding:16px;margin:0 0 12px}.msg{margin-top:14px}
+.gh{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:13px;font-weight:700;margin-bottom:8px}.gd{width:10px;height:10px;border-radius:50%;background:var(--mut)}
+.gt{display:flex;align-items:baseline;gap:10px;margin:2px 0 12px}.gt b{font-size:24px}.gt span{color:var(--mut)}
+.note2{display:flex;gap:12px;align-items:center;margin:14px 0}.note2 .sp{flex:none;width:44px;height:44px;border-radius:14px;background:var(--surf);display:grid;place-items:center;color:var(--lime)}.note2 span:last-child{color:var(--mut);font-size:14px}
+.small{text-align:center;font-size:13px;margin:8px 0 0}
+button{font:inherit}.btn{background:linear-gradient(90deg,var(--g1),var(--g2));color:var(--btnt);border:0;border-radius:999px;padding:14px 26px;font-weight:700;cursor:pointer}
+.ghost{background:none;border:0;color:var(--mut);padding:6px 0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--g2);outline-offset:2px}
+canvas{width:100%;height:250px;display:block}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0}
+.bright{height:14px;border-radius:7px;background:rgba(255,255,255,.1);position:relative;margin:16px 0 4px}
+.zone{position:absolute;top:-3px;height:20px;border-radius:10px;background:var(--band);border:1px solid var(--bandl)}
+.bright i{position:absolute;top:-3px;width:20px;height:20px;border-radius:50%;background:var(--line);left:50%;transform:translateX(-50%);transition:left .12s}
+.lbls{display:flex;justify-content:space-between;color:var(--mut);font-size:13px}
+.sl{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--g1),var(--g2));margin:8px 0}.sl::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--g2);border:3px solid var(--bg)}
+label.sw{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:15px;margin:4px 0}
+.big{font:700 56px Fraunces,serif;text-align:center;margin:10px 0}
+.pill{border:0;border-radius:999px;padding:10px 16px;background:var(--surf2);color:var(--tx);cursor:pointer}.ta{width:100%;border-radius:14px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);padding:10px;font:inherit}summary{cursor:pointer;font-weight:700}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.cal span{aspect-ratio:1;display:grid;place-items:center;border-radius:50%;font-size:14px;color:var(--mut)}.cal .on{background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--btnt);font-weight:700}.cal .td{outline:2px solid var(--g1)}
+audio{width:100%;margin-top:8px}.hide{display:none!important}
+</style></head><body><main>
+<nav class="nav" id="nav"><button data-go="home" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Practice</button><button data-go="prog"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V10M12 20V4M18 20v-7"/></svg>Progress</button><button data-go="recs"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Recordings</button></nav>
+
+<section id="home"><div class="brand"><span class="logo"><svg width="22" height="22" viewBox="0 0 22 22"><rect x="3" y="9" width="3.6" height="10" rx="1.6" fill="#1a1030"/><rect x="9.2" y="3" width="3.6" height="16" rx="1.6" fill="#1a1030"/><rect x="15.4" y="7" width="3.6" height="12" rx="1.6" fill="#1a1030"/></svg></span>Voxa</div>
+<p class="eb" id="dt" style="color:var(--g2);margin:24px 0 8px"></p><h1>Your voice, your pace.</h1><p class="lead">A few gentle minutes can make a real difference.</p>
+<div id="today"></div><p class="eb mt">Easy starts</p><h2>Routines</h2><div id="rl"></div><p class="eb mt">Build confidence</p><h2>Practice library</h2><div id="list"></div>
+<details class="msg"><summary>Settings</summary>
+<label class="sw"><input type="checkbox" id="oH"> Hide numbers</label><label class="sw"><input type="checkbox" id="oP"> Just practice (no summary after)</label>
+<div class="row"><span>Nudge targets <span id="nz" style="color:var(--mut)"></span></span><span><button class="pill" id="nd">Lower</button> <button class="pill" id="nu">Higher</button></span></div>
+<div class="row"><span>Pitch line</span><button class="pill" id="sm"></button></div><div class="row"><span>Resonance marker</span><button class="pill" id="cb">Calibrate</button></div>
+<p style="margin:8px 0 4px">My own sentences (one per line)</p><textarea id="mine" rows="3" class="ta"></textarea>
+<div class="row"><button class="pill" id="bk">Back up</button><button class="pill" id="rs2">Restore</button></div>
+<p id="bm" style="margin:0">Backup covers settings, check-ins and days. Recordings are not included.</p><textarea id="bt" class="ta hide" rows="4"></textarea></details></section>
+
+<section id="sess" class="hide"><div class="top"><button class="ghost" data-home>← Practice</button><span class="chip" id="mn"></span></div>
+<p class="eb" style="color:var(--g1)">Explore your voice</p><h1 id="sT"></h1><p id="sD" class="lead"></p>
+<div class="glass" id="txt"><div id="sent" style="font-size:20px"></div><button class="ghost" id="nx">Next sentence</button></div>
+<div class="glass"><div class="gh"><span>Your voice will appear here</span><i class="gd"></i></div><canvas id="cv"></canvas></div>
+<div class="glass"><p class="eb" style="margin:0">Resonance</p><div class="bright"><div class="zone" id="zone"></div><i id="dot"></i></div><div class="lbls"><span>darker</span><span>brighter</span></div></div>
+<div class="glass"><div class="gh"><span class="eb" style="margin:0">Your target</span><span class="chip">Adjust anytime</span></div><div class="gt"><b id="tl"></b><span id="th"></span></div>
+<input class="sl" id="sl" type="range" min="0" max="100" aria-label="Target from more masculine to more feminine"><div class="lbls"><span>more masculine</span><span>more feminine</span></div></div>
+<div class="note2"><span class="sp">✦</span><span><b style="color:var(--tx)">A gentle reminder</b><br>Comfort matters more than reaching a particular note.</span></div>
+<div class="row" style="margin:0 0 10px"><span id="now" style="font:700 22px Fraunces,serif"></span></div>
+<button class="cta" id="go"><span class="pc">≋</span><span id="gt">Start listening</span></button><p class="small">We’ll ask to use your microphone.</p>
+<div class="msg hide" id="done"></div></section>
+
+<section id="prog" class="hide"><h2>Progress</h2><p>Your natural speaking pitch, week to week. Small moves are real moves.</p>
+<canvas id="pc"></canvas><p id="pt" style="margin-top:12px"></p><button class="btn" id="ck">Do a check-in</button><h3>Days you practiced</h3><div id="cal"></div><h3>Your notes</h3><div id="nl"></div></section>
+
+<section id="recs" class="hide"><h2>Recordings</h2><p>Only what you chose to save, stored on this phone.</p><div id="rlist"></div></section>
+
+<section id="rout" class="hide"><button class="ghost" data-home>‹ Back</button><h2 id="rT"></h2><div class="hero"><h3 id="rs"></h3><p id="rd"></p><div class="big" id="rc"></div></div><button class="btn" id="rn">Next</button></section>
+</main>
+<script>
+const $=id=>document.getElementById(id),today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+let cfg={s:50,hide:false,plain:false,last:'',checks:[],sm:1,cal:null,notes:[],off:0,days:[],feels:[],mine:''};
+try{Object.assign(cfg,JSON.parse(localStorage.getItem('vp2')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('vp2',JSON.stringify(cfg))}catch(e){}};
+const band=()=>{const a=105+cfg.off,b=230+cfg.off,c=a*Math.pow(b/a,cfg.s/100);return{lo:c*.9,hi:c*1.1}};
+const word=s=>s<20?'Very masculine':s<40?'Leaning masculine':s<60?'In between':s<80?'Leaning feminine':'Very feminine';
+const EX=[
+{id:'range',t:'Find your range',d:'Glide gently down to your lowest comfortable note, then up to your highest. Easy, no pushing.'},
+{id:'siren',t:'Siren',d:'Slide up and down on “oo”, smooth and light. Watch the line stay unbroken.'},
+{id:'hold',t:'Steady hold',d:'Hold “ah” on a comfortable note inside the band. Aim for a flat line.'},
+{id:'straw',t:'Straw or hum',d:'Hum, or blow through a straw into a little water. Keep it soft and easy.'},
+{id:'res',t:'Resonance sustain',d:'Sustain “ee”, then “oo”. Try small changes in throat space, keeping pitch steady.'},
+{id:'read',read:1,t:'Read aloud',d:'Read each sentence naturally and let the line settle in the band.'},
+{id:'glide',t:'Pitch glide',d:'Glide smoothly from a low comfortable note up into the band, then back down. Slow and even.'},
+{id:'vowels',t:'Vowel colors',d:'Hold “ee”, “eh”, “ah”, “oh”, “oo” in turn on the same pitch. Watch how the marker shifts.'},
+{id:'dog',t:'Big dog, little dog',d:'Say “woof” big and low-feeling, then small and light, keeping pitch steady. Notice the resonance change.'}];
+const CHECK={id:'check',read:1,t:'Weekly check-in',d:'Read these naturally, or just chat about your day. It stops itself after 20 seconds.'};
+const S=["I'm heading to the shop, do you need anything?","Could you tell me what time the meeting starts?","The weather was lovely when we went for a walk.","Thanks so much, I really appreciate your help.","Let me know if you'd like to grab coffee later.","Sorry, could you say that one more time?","We had pasta for dinner and it was really good.","I'll be there in about ten minutes."];
+const sents=()=>[...S,...(cfg.mine||'').split('\n').map(x=>x.trim()).filter(Boolean)];
+const CAL={id:'cal',t:'Calibrate resonance',d:'Say “oo” as dark and deep-feeling as is comfortable, then “ee” as bright and light as is comfortable. Repeat a couple of times. It stops itself after 20 seconds.'};
+const isT=()=>ex.id==='check'||ex.id==='cal';
+const norm=c=>{const a=cfg.cal?cfg.cal.lo:500,b=cfg.cal?cfg.cal.hi:3000;return Math.min(1,Math.max(0,(c-a)/(b-a)))};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ROUT={warm:{t:'Warm-up',steps:[{t:'Easy hum',d:'Hum softly, like you are agreeing with someone.',s:45},{t:'Lip trill or straw',d:'Gentle bubbles, light breath.',s:45},{t:'Soft siren',d:'Slide up and down, nothing forced.',s:45}]},
+cool:{t:'Cool-down',steps:[{t:'Soft sighs',d:'Let the voice fall out on a sigh.',s:30},{t:'Low easy hum',d:'Hum comfortably, no effort.',s:30},{t:'Sip water',d:'Take a moment. You did good work.',s:20}]}};
+const KIND=['Nice work.','Easy does it. That counts.','Showing up is the practice.','It all adds up.'];
+let cents=[],fb=[],ex,run=null,hist=[],voiced=[],bright=.5,t0=0,nudged=false,lastBlob=null,si=0,rt=null;
+function go(id){['home','sess','prog','recs','rout'].forEach(x=>$(x).classList.toggle('hide',x!==id));
+ $('nav').classList.toggle('hide',id==='sess'||id==='rout');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));
+ if(id==='home')renderHome();if(id==='prog')renderProg();if(id==='recs')renderRecs()}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+document.querySelectorAll('[data-home]').forEach(b=>b.onclick=()=>{stop();clearInterval(rt);go('home')});
+$('oH').checked=cfg.hide;$('oP').checked=cfg.plain;
+$('oH').onchange=e=>{cfg.hide=e.target.checked;save()};$('oP').onchange=e=>{cfg.plain=e.target.checked;save()};
+const MIN={range:3,siren:3,hold:3,straw:4,res:4,read:5,glide:3,vowels:4,dog:3};
+function card(host,x,fn,sub,m,v){const b=document.createElement('button');b.className='lib';b.innerHTML=`<span class="ic v${v}"></span><span class="lt"><span class="lh"><b>${x.t}</b><em>${m} min</em></span><span>${sub}</span></span><span class="ar">→</span>`;b.onclick=fn;host.append(b)}
+function renderHome(){$('mine').value=cfg.mine||'';nz();smt();$('oH').checked=cfg.hide;$('oP').checked=cfg.plain;$('rl').innerHTML='';$('list').innerHTML='';
+ card($('rl'),ROUT.warm,()=>startRout('warm'),'Easy hum, lip trill and a soft siren.',2,0);card($('rl'),ROUT.cool,()=>startRout('cool'),'Soft sighs and a low hum to finish.',1,1);
+ EX.forEach((x,i)=>card($('list'),x,()=>open(x),x.d.split('.')[0]+'.',MIN[x.id],i%3));
+ const dn=Math.floor(Date.now()/864e5),pick=EX[dn%EX.length],c=cfg.checks,due=!c.length||(Date.now()-new Date(c[c.length-1].t))/864e5>=7,dd=cfg.last===today();
+ $('dt').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+ $('today').innerHTML=`<div class="hero"><span class="tag">✦ Today’s practice</span><span class="tm">6 min</span><h2>${dd?'You practiced today':'Warm up your voice'}</h2><p>${dd?'Nice. More is optional.':'Release tension, find an easy hum, then try '+pick.t.toLowerCase()+'.'}</p><div class="seg"><i class="${dd?'f':''}"></i><i class="${dd?'f':''}"></i><i class="${dd?'f':''}"></i></div><button class="cta" id="tb"><span class="pc">▶</span>${dd?'Practice more':'Start daily practice'}</button>${due?'<p class="note">Your weekly check-in is ready.</p>':''}${tired()?'<p class="note">Your voice has felt tired lately. Try the warm-up and a shorter session.</p>':''}</div>`;
+ $('tb').onclick=()=>dd?open(pick):startRout('warm')}
+function open(x){ex=x;go('sess');$('sT').textContent=x.t;$('mn').textContent=MIN[x.id]?MIN[x.id]+' min':'20 sec';$('sD').textContent=x.d;$('done').classList.add('hide');$('now').textContent='';
+ $('txt').classList.toggle('hide',!x.read);si=Math.floor(Math.random()*sents().length);$('sent').textContent=sents()[si];$('sl').value=cfg.s;tgt();hist=[];draw()}
+$('nx').onclick=()=>{si=(si+1)%sents().length;$('sent').textContent=sents()[si]};
+function tgt(){const b=band();$('tl').textContent=word(cfg.s);$('th').textContent=cfg.hide?'':Math.round(b.lo)+'–'+Math.round(b.hi)+' Hz';
+ const c=.15+.7*cfg.s/100;$('zone').style.left=(5+(c-.12)*90)+'%';$('zone').style.width='21.6%'}
+$('sl').oninput=e=>{cfg.s=+e.target.value;save();tgt();draw()};
+const cv=$('cv'),ctx=cv.getContext('2d'),FMIN=70,FMAX=450,W=8000;
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v);
+const yOf=(f,h)=>h-12-(Math.log(f/FMIN)/Math.log(FMAX/FMIN))*(h-24);
+function fit(c){const r=devicePixelRatio||1;c.width=c.clientWidth*r;c.height=c.clientHeight*r;return r}
+function draw(){const r=fit(cv),w=cv.width,h=cv.height,b=band(),y1=yOf(b.hi,h),y2=yOf(b.lo,h);ctx.clearRect(0,0,w,h);
+ ctx.strokeStyle='rgba(128,110,200,.14)';ctx.lineWidth=r;for(let i=1;i<6;i++){const gy=h*i/6,gx=w*i/6;ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(w,gy);ctx.moveTo(gx,0);ctx.lineTo(gx,h);ctx.stroke()}
+ const bh=Math.max(y2-y1,30*r),by=(y1+y2)/2-bh/2;ctx.beginPath();ctx.roundRect?ctx.roundRect(r,by,w-2*r,bh,14*r):ctx.rect(r,by,w-2*r,bh);ctx.fillStyle=css('--band');ctx.fill();ctx.strokeStyle=css('--bandl');ctx.stroke();
+ ctx.fillStyle='rgba(128,110,200,.4)';for(let x=12*r;x<w-8*r;x+=14*r)ctx.fillRect(x,by+bh/2-5*r,3*r,10*r);
+ ctx.fillStyle=css('--bandl');ctx.font=`700 ${10*r}px DM Sans,sans-serif`;ctx.fillText('COMFORT ZONE',10*r,by-6*r);
+ const now=performance.now();ctx.strokeStyle=css('--line');ctx.lineWidth=4*r;ctx.lineCap=ctx.lineJoin='round';let pen=false;ctx.beginPath();
+ for(const p of hist){if(p.f==null){pen=false;continue}const x=w-(now-p.t)/W*w,y=yOf(Math.min(FMAX,Math.max(FMIN,p.f)),h);pen?ctx.lineTo(x,y):ctx.moveTo(x,y);pen=true}ctx.stroke();
+ const l=hist[hist.length-1];if(l&&l.f!=null){ctx.fillStyle=css('--line');ctx.beginPath();ctx.arc(w-4*r,yOf(l.f,h),8*r,0,7);ctx.fill()}}
+function yin(buf,sr){const N=1024,tmax=Math.min(Math.floor(sr/60),buf.length-N-1),tmin=Math.floor(sr/600),d=new Float32Array(tmax+1);
+ for(let t=1;t<=tmax;t++){let s=0;for(let i=0;i<N;i++){const v=buf[i]-buf[i+t];s+=v*v}d[t]=s}
+ let a=0;d[0]=1;for(let t=1;t<=tmax;t++){a+=d[t];d[t]=d[t]*t/(a||1)}
+ for(let t=tmin;t<tmax;t++)if(d[t]<.15){while(t+1<tmax&&d[t+1]<d[t])t++;const p=d[t-1],q=d[t],n=d[t+1],den=p-2*q+n;return{f:sr/(t+(den?(p-n)/(2*den):0)),c:1-q}}return null}
+$('go').onclick=()=>run?stop(true):start();
+async function start(){try{const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+ const ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const an=ac.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.6;ac.createMediaStreamSource(st).connect(an);
+ run={st,ac,an,td:new Float32Array(2048),fd:new Float32Array(1024)};lastBlob=null;
+ try{const ch=[],rec=new MediaRecorder(st);rec.ondataavailable=e=>ch.push(e.data);rec.onstop=()=>{lastBlob=new Blob(ch,{type:rec.mimeType})};rec.start();run.rec=rec}catch(e){}
+ }catch(e){$('now').textContent='Mic blocked. Allow it in Safari settings.';return}
+ hist=[];voiced=[];cents=[];fb=[];t0=performance.now();nudged=false;$('done').classList.add('hide');$('gt').textContent='Stop';loop()}
+function loop(){if(!run)return;const{an,td,fd,ac}=run;an.getFloatTimeDomainData(td);let rms=0;for(const v of td)rms+=v*v;rms=Math.sqrt(rms/td.length);
+ const now=performance.now();let f=null;if(rms>.01){const p=yin(td,ac.sampleRate);if(p&&p.c>.8)f=p.f}
+ if(f!=null){fb.push(f);const N=[1,5,9][cfg.sm];while(fb.length>N)fb.shift();f=[...fb].sort((a,b)=>a-b)[fb.length>>1]}else fb=[];
+ hist.push({t:now,f});while(hist.length&&now-hist[0].t>W)hist.shift();
+ if(f!=null){voiced.push(f);an.getFloatFrequencyData(fd);const bw=ac.sampleRate/2048;let n=0,d=0;
+  for(let i=Math.floor(300/bw);i<Math.floor(4000/bw);i++){const m=Math.pow(10,fd[i]/20);n+=m*i*bw;d+=m}
+  if(d>0){cents.push(n/d);bright+=(norm(n/d)-bright)*.15;$('dot').style.left=(5+bright*90)+'%'}}
+ $('now').textContent=isT()?Math.max(0,20-Math.floor((now-t0)/1000))+'s':cfg.hide?'':f!=null?Math.round(f)+' Hz':'…';
+ if(isT()&&now-t0>2e4){stop(true);return}
+ if(!nudged&&now-t0>9e5){nudged=true;$('now').textContent='15 min. Sip water, rest.'}
+ draw();requestAnimationFrame(loop)}
+function stop(show){if(!run)return;const r=run;run=null;try{r.rec&&r.rec.state!=='inactive'&&r.rec.stop()}catch(e){}r.st.getTracks().forEach(t=>t.stop());r.ac.close();$('gt').textContent='Start listening';
+ if(!show)return;const d=$('done'),kind=KIND[Math.floor(Math.random()*KIND.length)];d.classList.remove('hide');
+ if(voiced.length<10){d.textContent='Not much voice picked up. Try a bit closer to the mic. '+kind;return}
+ cfg.last=today();if(!cfg.days.includes(today()))cfg.days.push(today());const s=[...voiced].sort((a,b)=>a-b),q=p=>s[Math.floor(p*(s.length-1))];
+ if(ex.id==='check'&&voiced.length>=30){cfg.checks.push({t:today(),m:Math.round(q(.5))})}if(ex.id==='cal'&&cents.length>=40){const c=[...cents].sort((a,b)=>a-b),lo=c[Math.floor(.1*(c.length-1))],hi=c[Math.floor(.9*(c.length-1))];cfg.cal={lo,hi:Math.max(hi,lo+300)}}save();
+ let h='';if(!cfg.plain&&!cfg.hide){const b=band(),inb=voiced.filter(f=>f>=b.lo&&f<=b.hi).length/voiced.length;
+  h=ex.id==='range'?`<p>You reached ${Math.round(q(.05))}–${Math.round(q(.95))} Hz.</p>`:`<p>Middle pitch ${Math.round(q(.5))} Hz · in band ${Math.round(inb*100)}%</p>`}
+ if(ex.id==='check')h+='<p>Check-in saved to Progress.</p>';if(ex.id==='cal')h+=cents.length>=40?'<p>Done. The marker now measures against your own voice.</p>':'<p>Not enough sound picked up. Try again a little closer.</p>';
+ d.innerHTML=h+(r.rec?'<button class="btn" id="svr">Save recording</button>':'')+FEEL+`<p style="margin:12px 0 0">${kind}</p>`;
+ if($('svr'))$('svr').onclick=async()=>{if(!lastBlob){$('svr').textContent='Tap again';return}try{await dbPut({id:Date.now(),t:ex.t,d:today(),blob:lastBlob});$('svr').textContent='Saved';$('svr').disabled=true}catch(e){$('svr').textContent='Could not save'}}}
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('vp',1);r.onupgradeneeded=()=>r.result.createObjectStore('r',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=rej});
+const dbX=async(m,a)=>{const d=await idb();return new Promise((res,rej)=>{const q=d.transaction('r',m==='getAll'?'readonly':'readwrite').objectStore('r')[m](a);q.onsuccess=()=>res(q.result);q.onerror=rej})};
+const dbPut=o=>dbX('put',o);
+let sel=[];
+async function renderRecs(){const h=$('rlist');h.innerHTML='';sel=[];let all=[];try{all=await dbX('getAll')}catch(e){}
+ if(!all.length){h.innerHTML='<div class="msg">Nothing saved yet. After a session, tap “Save recording”.</div>';return}
+ const bar=document.createElement('div');bar.className='msg';bar.innerHTML='<b>Compare</b><p id="cm" style="margin:4px 0 8px">Tap Compare on two recordings.</p><button class="btn hide" id="cp">Play older, then newer</button>';h.append(bar);
+ const bs=[],ref=()=>{bs.forEach(([b,o])=>b.textContent=sel.includes(o)?'Selected':'Compare');$('cp').classList.toggle('hide',sel.length<2)};
+ $('cp').onclick=()=>{const a=[...sel].sort((x,y)=>x.id-y.id).map(o=>new Audio(URL.createObjectURL(o.blob)));a[0].play();a[0].onended=()=>a[1].play()};
+ all.reverse().forEach(o=>{const d=document.createElement('div');d.className='msg';d.innerHTML=`<b>${o.t}</b> <span style="color:var(--mut)">${o.d}</span><audio controls src="${URL.createObjectURL(o.blob)}"></audio><button class="ghost" data-c>Compare</button> <button class="ghost" data-x>Delete</button>`;
+  const cb=d.querySelector('[data-c]');bs.push([cb,o]);cb.onclick=()=>{sel.includes(o)?sel.splice(sel.indexOf(o),1):(sel.push(o),sel.length>2&&sel.shift());ref()};
+  d.querySelector('[data-x]').onclick=async()=>{await dbX('delete',o.id);renderRecs()};h.append(d)})}
+function renderProg(){cal();notes();const c=cfg.checks,pc=$('pc'),x=pc.getContext('2d'),r=fit(pc),w=pc.width,h=pc.height,b=band();x.clearRect(0,0,w,h);
+ if(!c.length){$('pt').textContent='No check-ins yet. Your first one takes about 20 seconds.';return}
+ const v=c.map(k=>k.m),lo=Math.min(...v,b.lo)*.92,hi=Math.max(...v,b.hi)*1.08,Y=f=>h-14*r-(Math.log(f/lo)/Math.log(hi/lo))*(h-28*r);
+ x.fillStyle=css('--band');x.fillRect(0,Y(b.hi),w,Y(b.lo)-Y(b.hi));
+ const X=i=>c.length<2?w/2:24*r+i*(w-48*r)/(c.length-1);x.strokeStyle=css('--line');x.fillStyle=css('--line');x.lineWidth=3*r;x.beginPath();
+ c.forEach((k,i)=>i?x.lineTo(X(i),Y(k.m)):x.moveTo(X(i),Y(k.m)));x.stroke();c.forEach((k,i)=>{x.beginPath();x.arc(X(i),Y(k.m),6*r,0,7);x.fill()});
+ if(c.length<2){$('pt').textContent='One check-in saved. Do another in a week to see movement.';return}
+ const dd=v[v.length-1]-v[0],pct=Math.abs(dd)/v[0],dir=pct<.03?'stayed about the same':dd>0?'moved up':'moved down';
+ $('pt').textContent=`Your pitch has ${dir} since ${c[0].t}`+(cfg.hide?'.':` (${v[0]} to ${v[v.length-1]} Hz). Shaded area is your current target.`)}
+$('ck').onclick=()=>open(CHECK);
+function startRout(k){const R=ROUT[k];let i=0,t;go('rout');$('rT').textContent=R.t;
+ const show=()=>{const s=R.steps[i];if(!s){clearInterval(rt);cfg.last=today();if(!cfg.days.includes(today()))cfg.days.push(today());save();$('rs').textContent='All done';$('rd').textContent='Nice work.';$('rc').textContent='';$('rn').textContent='Finish';return}
+  $('rs').textContent=s.t;$('rd').textContent=s.d;t=s.s;$('rc').textContent=t;$('rn').textContent=i<R.steps.length-1?'Next':'Finish'};
+ clearInterval(rt);show();rt=setInterval(()=>{if(!R.steps[i])return;t--;$('rc').textContent=Math.max(0,t);if(t<=0){i++;show()}},1000);
+ $('rn').onclick=()=>{if(!R.steps[i]){clearInterval(rt);go('home');return}i++;show();if(!R.steps[i-0]&&0)0}}
+addEventListener('resize',()=>{draw();if(!$('prog').classList.contains('hide'))renderProg()});
+const FEEL='<p style="margin:12px 0 6px">How did that feel?</p><div id="fl" style="display:flex;gap:8px;flex-wrap:wrap">'+['Easy','A bit strained','Tired'].map((x,i)=>`<button class="pill" data-f="${i}">${x}</button>`).join('')+'</div><p style="margin:14px 0 6px">A note for yourself</p><textarea id="nt" class="ta" rows="2" placeholder="What worked, what felt different…"></textarea><button class="pill" id="ns" style="margin-top:8px">Save note</button>';
+document.addEventListener('click',e=>{if(e.target.id==='ns'){const v=$('nt').value.trim();if(v){cfg.notes.push({t:today(),e:ex.t,v});save();e.target.textContent='Saved';e.target.disabled=true}}const b=e.target.closest('[data-f]');if(b){cfg.feels.push({t:today(),v:+b.dataset.f});save();$('fl').innerHTML='<span style="color:var(--mut)">Thanks, noted.</span>'}});
+const tired=()=>cfg.feels.slice(-3).filter(x=>x.v>0&&(Date.now()-new Date(x.t))/864e5<=3).length>=2;
+const nz=()=>{$('nz').textContent=cfg.hide?'':(cfg.off>0?'+':'')+cfg.off+' Hz'};
+$('nu').onclick=()=>{cfg.off=Math.min(60,cfg.off+5);save();nz()};$('nd').onclick=()=>{cfg.off=Math.max(-40,cfg.off-5);save();nz()};
+$('mine').oninput=e=>{cfg.mine=e.target.value;save()};
+function cal(){const n=new Date(),y=n.getFullYear(),m=n.getMonth(),f=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();let h=`<p>${n.toLocaleString('default',{month:'long'})}</p><div class="cal">`;
+ for(let i=0;i<f;i++)h+='<span></span>';for(let d=1;d<=dim;d++){const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;h+=`<span class="${cfg.days.includes(k)?'on':''}${d===n.getDate()?' td':''}">${d}</span>`}$('cal').innerHTML=h+'</div>'}
+$('bk').onclick=async()=>{const s=JSON.stringify({v:2,cfg}),ta=$('bt');ta.value=s;ta.classList.remove('hide');ta.select();
+ try{await navigator.clipboard.writeText(s);$('bm').textContent='Copied. Paste it into Notes to keep it safe.'}catch(e){$('bm').textContent='Select all, copy, and paste into Notes.'}};
+$('rs2').onclick=()=>{const ta=$('bt');if(ta.classList.contains('hide')||!ta.value.trim().startsWith('{')){ta.value='';ta.classList.remove('hide');$('bm').textContent='Paste your backup here, then tap Restore again.';return}
+ try{Object.assign(cfg,JSON.parse(ta.value).cfg);save();ta.classList.add('hide');ta.value='';go('home')}catch(e){$('bm').textContent='That backup text did not look right.'}};
+const smt=()=>{$('sm').textContent=['Live','Smooth','Extra smooth'][cfg.sm]};$('sm').onclick=()=>{cfg.sm=(cfg.sm+1)%3;save();smt()};$('cb').onclick=()=>open(CAL);
+function notes(){const n=cfg.notes.slice(-6).reverse();$('nl').innerHTML=n.length?n.map(x=>`<div class="msg" style="margin:0 0 8px"><span style="color:var(--mut);font-size:13px">${x.t} · ${esc(x.e)}</span><br>${esc(x.v)}</div>`).join(''):'<p>Notes you save after sessions will show up here.</p>'}
+try{navigator.serviceWorker&&navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
+go('home');
+</script></body></html>
